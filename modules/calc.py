@@ -18,6 +18,7 @@
 #
 
 from module import Module
+from math import *
 
 class Calc(Module):
 	def __init__(self, room):
