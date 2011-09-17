@@ -33,6 +33,7 @@ class Calc(Module):
 		priorite['x'] = 2
 		priorite['/'] = 2
 		s = []
+		ss = [s]
 		postfix = []
 		prev_was_chiffre = False 
 		for e in expression:
@@ -53,16 +54,24 @@ class Calc(Module):
 				else:
 					postfix.append(int(e))
 				prev_was_chiffre = True
-	
+			elif e == '(':
+				s = []
+				ss.append(s)
+			elif e == ')':
+				while len(s) > 0:
+					postfix.append(s.pop())
+
+				ss.pop()
+				s = ss.pop()
+				ss.append(s)
+
 		while len(s) > 0:
 			postfix.append(s.pop())
 					
 		return postfix
 	
 	def calc(self, expression):
-		print expression
 		postfix = self.convert(expression)
-		print postfix
 		s = []
 		for symbol in postfix:
 			if type(symbol) == int:
