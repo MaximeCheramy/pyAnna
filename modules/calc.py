@@ -23,16 +23,23 @@ class Calc(Module):
 	def __init__(self, room):
 		self.room = room
 
+	def calc(self, expression):
+		try:
+			#make a list of safe functions
+			safe_list = ['math','acos', 'asin', 'atan', 'atan2', 'ceil', 'cos', 'cosh', 'degrees', 'e', 'exp', 'fabs', 'floor', 'fmod', 'frexp', 'hypot', 'ldexp', 'log', 
+									'log10', 'modf', 'pi', 'pow', 'radians', 'sin', 'sinh', 'sqrt', 'tan', 'tanh']
+			#use the list to filter the local namespace
+			safe_dict = dict([ (k, locals().get(k, None)) for k in safe_list ])
+			#add any needed builtins back in.
+			safe_dict['abs'] = abs
+			return eval(expression, {"__builtins__":None},safe_dict)
+		except:
+			return 'yé pas compris.'
+
 	def handle_message(self, msg):
 		if msg['body'].startswith("!calc "):
-			try:
-				self.room.send_message(str(eval(msg['body'][6:])))
-			except:
-				self.room.send_message('yé pas compris.')
+				self.room.send_message(str(self.calc(msg['body'][6:])))
 
 	def handle_private_message(self, msg, to):
 		if msg['body'].startswith("!calc "):
-			try:
-				self.room.send_private_message(str(eval(msg['body'][6:])), to)
-			except:
-				self.room.send_message_message('yé pas compris.')
+				self.room.send_private_message(str(self.calc(msg['body'][6:])), to)
