@@ -39,8 +39,12 @@ class Calc(Module):
 
 	def handle_message(self, msg):
 		if msg['body'].startswith("!calc "):
+				msg['body'] = msg['body'].replace('"', '')
+				msg['body'] = msg['body'].replace("'", '')
 				self.room.send_message(str(self.calc(msg['body'][6:])))
 
 	def handle_private_message(self, msg, to):
 		if msg['body'].startswith("!calc "):
+				msg['body'] = msg['body'].replace('"', '')
+				msg['body'] = msg['body'].replace("'", '')
 				self.room.send_private_message(str(self.calc(msg['body'][6:])), to)
