@@ -7,3 +7,6 @@ class Module:
 
 	def muc_online(self, presence):
 		pass
+
+	def muc_offline(self, presence):
+		pass

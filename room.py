@@ -38,11 +38,18 @@ class Room:
 
 		self._xmpp.add_event_handler("muc::%s::got_online" % self._room,
 																												 self.muc_online)
+		self._xmpp.add_event_handler("muc::%s::got_offline" % self._room,
+																												 self.muc_offline)
 
 	def muc_online(self, presence):
 		if presence['muc']['nick'] != self._botname:
 			for module in self._modules:
 				module.muc_online(presence)
+
+	def muc_offline(self, presence):
+		if presence['muc']['nick'] != self._botname:
+			for module in self._modules:
+				module.muc_offline(presence)
 
 	def handle_message(self, msg):
 		if msg['mucnick'] != self._botname:
