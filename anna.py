@@ -20,6 +20,7 @@
 import logging
 import sleekxmpp
 import room
+from control import Control
 from ConfigParser import ConfigParser
 
 # Uncomment the following line to turn on debugging
@@ -43,6 +44,7 @@ class Anna(sleekxmpp.ClientXMPP):
 		password = config.get("general", "password")
 		sleekxmpp.ClientXMPP.__init__(self, jid + "/" + resource, password)
 		self._rooms = []
+		self._control = Control(self)
 
 		self.add_event_handler("session_start", self.handle_XMPP_connected)
 		self.add_event_handler("message", self.handle_incoming_message)
@@ -61,6 +63,8 @@ class Anna(sleekxmpp.ClientXMPP):
 			for room in self._rooms:
 				if room.get_roomname() == message['from'].bare and message['from'].resource in room.get_roster():
 					room.handle_private_message(message, message['from'])
+					break
+			self._control.handle_message(message, message['from'])
 
 if __name__ == "__main__" :
 	main()
