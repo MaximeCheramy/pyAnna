@@ -15,9 +15,16 @@
 # along with this program; if not, see <http://www.gnu.org/licenses>.
 #
 
-from modules.talkative import Talkative
-from modules.whois import Whois
-from modules.bonjour import Bonjour
+import imp, os, sys
+
+def import_module(name):
+	fp, pathname, description = imp.find_module(name)
+	try:
+		return imp.load_module(name, fp, pathname, description)
+	finally:
+		if fp:
+			fp.close()
+
 
 class Room:
 	def __init__(self, xmpp, room, modules, botname):
@@ -25,12 +32,20 @@ class Room:
 		self._room = room
 		self._botname = botname
 
-		self._modules = []
+		self._modules = dict()
+
+		cmd_folder = os.path.abspath('modules')
+		if cmd_folder not in sys.path:
+			sys.path.insert(0, cmd_folder)
+
 		for module in modules:
-			m = module.split(".")
-			c = getattr(__import__("modules." + m[0], fromlist=[m[1]]), m[1])
-			self._modules.append(c(self))
-	
+			self.load_module(module)
+
+	def load_module(self, name):
+		m = name.split(".")
+		c = getattr(import_module(m[0]), m[1])
+		self._modules[name] = c(self)
+
 	def connect(self):
 		self._xmpp.plugin['xep_0045'].joinMUC(self._room, self._botname)
 		self._xmpp.add_event_handler("muc::%s::message" % self._room,
@@ -43,22 +58,22 @@ class Room:
 
 	def muc_online(self, presence):
 		if presence['muc']['nick'] != self._botname:
-			for module in self._modules:
+			for module in self._modules.values():
 				module.muc_online(presence)
 
 	def muc_offline(self, presence):
 		if presence['muc']['nick'] != self._botname:
-			for module in self._modules:
+			for module in self._modules.values():
 				module.muc_offline(presence)
 
 	def handle_message(self, msg):
 		if msg['mucnick'] != self._botname:
-			for module in self._modules:
+			for module in self._modules.values():
 				module.handle_message(msg)
 
 	def handle_private_message(self, msg, to):
 		if msg['mucnick'] != self._botname:
-			for module in self._modules:
+			for module in self._modules.values():
 				module.handle_private_message(msg, to)
 
 	def get_roster(self):
