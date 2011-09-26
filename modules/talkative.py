@@ -78,15 +78,14 @@ class Talkative(Module):
 		self.phrases = "phrases.txt"
 		self.room = room
 		self.load()
+		self.output_file = open(self.phrases + "~", 'a')
 
 	def load(self):
 		for line in file(self.phrases):
 			self.insertDB(line)
 
 	def appendFile(self, message):
-		f = open(self.phrases + "~", 'a')
-		f.write(message + "\n")
-		pass
+		self.output_file.write(message + "\n")
 
 	def insertDB(self, message):
 		if not message:
