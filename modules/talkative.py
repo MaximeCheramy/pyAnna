@@ -77,8 +77,8 @@ class Talkative(Module):
 		self.words = dict()
 		self.phrases = "phrases.txt"
 		self.room = room
-		self.load()
 		self.output_file = open(self.phrases + "~", 'a')
+		self.load()
 
 	def load(self):
 		for line in file(self.phrases):
