@@ -32,7 +32,7 @@ class War(Module):
 		if victim == pseudo_shooter:
 			self.room.send_message(pseudo_shooter + " s'est tiré une balle dans le pied...")
 		else:
-			self.room.send_message( + " est mort.")
+			self.room.send_message(victim + " est mort.")
 
 	def handle_message(self, msg):
 		if msg['body'] == '!shoot':
