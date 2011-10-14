@@ -19,10 +19,37 @@
 
 from module import Module
 from random import choice
+import threading
+import time
+
+class Bombe(threading.Thread):
+	def __init__(self, attacker, room):
+		threading.Thread.__init__(self)
+		self.active = True
+		self.room = room
+		roster = self.room.get_roster()
+		roster.remove(self.room.get_botname())
+		self.victime = choice(roster)
+		if self.victime == attacker:
+			self.room.send_message(attacker + " a jeté une bombe sur ses propres pieds ! Mouahaha !")
+		else:
+			self.room.send_message(attacker + " a jeté une bombe sur les pieds de " + victime + ".")
+		self.start()
+
+	def run(self):
+		time.sleep(10.0)
+		if self.active:
+			self.room.send_message("Boom! " + self.victime + " est mort !")
+
+	def defuse(self):
+		if self.active:
+			self.room.send_message("Bombe désactivée à temps !")
+			self.active = False
 
 class War(Module):
 	def __init__(self, room):
 		self.room = room
+		self.bombs = []
 
 	def shoot(self, jid):
 		pseudo_shooter = jid.resource
@@ -34,6 +61,18 @@ class War(Module):
 		else:
 			self.room.send_message(victim + " est mort.")
 
+	def drop_bomb(self, jid):
+		self.bombs.append(Bombe(jid.resource, self.room))
+
+	def defuse_bomb(self, jid):
+		for b in self.bombs:
+			if b.victime == jid.resource:
+				b.defuse()
+
 	def handle_message(self, msg):
 		if msg['body'] == '!shoot':
-			self.shoot(msg['from'])					
+			self.shoot(msg['from'])
+		elif msg['body'] == '!bomb':
+			self.drop_bomb(msg['from'])
+		elif msg['body'] == '!defuse':
+			self.defuse_bomb(msg['from'])
