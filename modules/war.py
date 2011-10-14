@@ -33,7 +33,7 @@ class Bombe(threading.Thread):
 		if self.victime == attacker:
 			self.room.send_message(attacker + " a jeté une bombe sur ses propres pieds ! Mouahaha !")
 		else:
-			self.room.send_message(attacker + " a jeté une bombe sur les pieds de " + victime + ".")
+			self.room.send_message(attacker + " a jeté une bombe sur les pieds de " + self.victime + ".")
 		self.start()
 
 	def run(self):
