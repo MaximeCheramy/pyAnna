@@ -40,6 +40,7 @@ class Bombe(threading.Thread):
 		time.sleep(10.0)
 		if self.active:
 			self.room.send_message("Boom! " + self.victime + " est mort !")
+			self.active = False
 
 	def defuse(self):
 		if self.active:
