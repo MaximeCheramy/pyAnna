@@ -8,7 +8,7 @@ class Whois(Module):
 		self.room = room
 
 	def whois(self, send, msg, name):
-		data = urllib.urlopen(Whois.URL + name).read().split("\n")
+		data = urllib.urlopen(Whois.URL + name, proxies={}).read().split("\n")
 		if data[0] == 'ok=1':
 			nom = data[1].split("=", 1)[1]
 			prenom = data[2].split("=", 1)[1]
