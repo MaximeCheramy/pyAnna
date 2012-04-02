@@ -142,4 +142,8 @@ class Quizz(Module,threading.Thread):
 		elif self.questionAsked:
 			if self.currentQuestion.isAnswer(message):
 				self.room.sendMessage(nickname + " a trouvé la bonne réponse !")
+		elif msg['body'] == '!help':
+			time.sleep(0.5)
+			self.room.send_message('- !start : lance le quizz')
+			self.room.send_message('- !stop : arrête le quizz')
 
