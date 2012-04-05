@@ -34,7 +34,7 @@ class Reminder(Module):
 				minutes = int(minutes)
 			except ValueError:
 				valide = False
-
+			
 			if valide:
 				# On créé un tps de rappel
 				t_rappel = datetime.datetime(1,1,1, heure, minutes, 00)
@@ -42,7 +42,7 @@ class Reminder(Module):
 				m_rappel = msg[14:]
 				# On ne met pas de rappel pour un message vide...
 				if m_rappel != '':
-					if to:
+					if not to:
 						# On mets les deux dans un tableau pour les rappels généraux
 						self._tab.append((t_rappel, m_rappel))
 						# On annonce que c'est OK
