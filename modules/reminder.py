@@ -34,6 +34,9 @@ class Reminder(Module):
 				minutes = int(minutes)
 			except ValueError:
 				valide = False
+			# On vérifie qu'il n'y ait pas de gros lourd qui tente de faire crasher Anna
+			if heure >= 24 or heure < 0 or minutes >= 60 or minutes < 0:
+				valide = False
 			
 			if valide:
 				# On créé un tps de rappel
