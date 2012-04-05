@@ -42,7 +42,7 @@ class Anna(sleekxmpp.ClientXMPP):
 		jid = config.get("general", "jid")
 		resource = config.get("general", "resource")
 		password = config.get("general", "password")
-		self.owner = config.get("general", "owner")
+		self._owners = config.get("general", "owner").split(",")
 		sleekxmpp.ClientXMPP.__init__(self, jid + "/" + resource, password)
 		self._rooms = []
 		self._control = Control(self)
@@ -65,7 +65,7 @@ class Anna(sleekxmpp.ClientXMPP):
 				if room.get_roomname() == message['from'].bare and message['from'].resource in room.get_roster():
 					room.handle_private_message(message, message['from'])
 					break
-			if message['from'].bare == self.owner:
+			if message['from'].bare in self._owners:
 				self._control.handle_message(message, message['from'])
 
 if __name__ == "__main__" :
