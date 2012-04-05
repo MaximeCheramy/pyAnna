@@ -21,7 +21,7 @@ class Reminder(Module):
 		_continuer = False
 		self._thread.join()
 
-	def ecrire_rappel(self, msg, to):
+	def ecrire_rappel(self, msg, to=None):
 		# On splitte le message
 		heure = msg[8:10]
 		minutes = msg[11:13]
@@ -42,7 +42,7 @@ class Reminder(Module):
 				m_rappel = msg[14:]
 				# On ne met pas de rappel pour un message vide...
 				if m_rappel != '':
-					if to == '':
+					if to:
 						# On mets les deux dans un tableau pour les rappels généraux
 						self._tab.append((t_rappel, m_rappel))
 						# On annonce que c'est OK
@@ -73,7 +73,7 @@ class Reminder(Module):
 			time.sleep(0.5)
 			self.room.send_message("- !rappel 20h17 Prendre ma brosse à dents : Vous affichera un rappel à 20h17 pour ne pas oublier ^^")
 		elif msg['body'][:7] ==  "!rappel":
-			self.ecrire_rappel(msg['body'], '')
+			self.ecrire_rappel(msg['body'])
 
 	def handle_private_message(self, msg, to):
 		if msg['body'][:7] == "!rappel":
