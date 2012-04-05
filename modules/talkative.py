@@ -17,7 +17,7 @@
 # along with this program; if not, see <http://www.gnu.org/licenses>.
 #
 
-import random, string
+import random, string, time
 from module import Module
 
 class Talkative(Module):
@@ -143,8 +143,11 @@ class Talkative(Module):
 	
 	def handle_message(self, msg):
 		self.insertDB(msg['body'])
-		if self.room.get_botname() in msg['body']:
+		if self.room.get_botname().lower() in msg['body'].lower():
 			self.room.send_message(self.generate())
+		elif msg['body'] == '!help':
+			time.sleep(0.5)
+			self.room.send_message("- "+self.room.get_botname()+ ": placez-le dans une phrase, "+ self.room.get_botname()+" va vous répondre")
 
 if __name__ == "__main__":
 	t = Talkative(None, "phrases.txt")

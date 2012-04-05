@@ -17,6 +17,7 @@
 # along with this program; if not, see <http://www.gnu.org/licenses>.
 #
 
+import time
 from module import Module
 from math import *
 
@@ -39,12 +40,16 @@ class Calc(Module):
 
 	def handle_message(self, msg):
 		if msg['body'].startswith("!calc "):
-				msg['body'] = msg['body'].replace('"', '')
-				msg['body'] = msg['body'].replace("'", '')
-				self.room.send_message(str(self.calc(msg['body'][6:])))
+			msg['body'] = msg['body'].replace('"', '')
+			msg['body'] = msg['body'].replace("'", '')
+			self.room.send_message(str(self.calc(msg['body'][6:])))
+		elif msg['body'] == '!help':
+			time.sleep(0.5)
+			self.room.send_message('- !calc : calcule une expression donnée en paramètre')
+			self.room.send_message('   Ex : !calc 4*(4+2)')
 
 	def handle_private_message(self, msg, to):
 		if msg['body'].startswith("!calc "):
-				msg['body'] = msg['body'].replace('"', '')
-				msg['body'] = msg['body'].replace("'", '')
-				self.room.send_private_message(str(self.calc(msg['body'][6:])), to)
+			msg['body'] = msg['body'].replace('"', '')
+			msg['body'] = msg['body'].replace("'", '')
+			self.room.send_private_message(str(self.calc(msg['body'][6:])), to)

@@ -1,4 +1,5 @@
-import urllib
+# -*- coding: utf-8 -*-
+import urllib, time
 from module import Module
 
 class Whois(Module):
@@ -30,8 +31,11 @@ class Whois(Module):
 					self.whois(send, msg, jid.split('@', 1)[0])
 				else:
 					self.whois(send, msg, message[1])
-
+		
 	def handle_message(self, msg):
+		if msg['body'] == '!help':
+			time.sleep(0.5)
+			self.room.send_message("- !whois : Donne le nom et prénom du pseudo passé en paramètre")
 		send = lambda m: self.room.send_message(m)
 		self.whois_(send, msg)
 

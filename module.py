@@ -1,6 +1,11 @@
+import time
 class Module:
 	def handle_message(self, msg):
-		pass
+		if msg['body'].lower() == '!help':
+			time.sleep(0.5)
+			self.room.send_message('============ Aide Generale ===========')
+		else:
+			pass
 
 	def handle_private_message(self, msg, to):
 		pass
@@ -9,4 +14,5 @@ class Module:
 		pass
 
 	def muc_offline(self, presence):
-		pass
+		pass    		
+

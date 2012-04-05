@@ -77,3 +77,9 @@ class War(Module):
 			self.drop_bomb(msg['from'])
 		elif msg['body'] == '!defuse':
 			self.defuse_bomb(msg['from'])
+		elif msg['body'].lower() == '!help':
+			time.sleep(0.5)
+			self.room.send_message('- !shoot : tue qqun dans le tchat')
+			self.room.send_message('- !bomb : envoie une bombe sur les pieds de qqun')
+			time.sleep(0.5)
+			self.room.send_message('- !defuse : desactive la bombe que qqun vous a envoyé sur les pieds')
