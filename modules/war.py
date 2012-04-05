@@ -72,9 +72,9 @@ class War(Module):
 
 	def handle_message(self, msg):
 		if msg['body'] == '!shoot':
-			self.shoot(msg['from'])			
+			self.shoot(msg['from'])
 		elif msg['body'] == '!bomb':
-			self.drop_bomb(msg['from'])			
+			self.drop_bomb(msg['from'])
 		elif msg['body'] == '!defuse':
 			self.defuse_bomb(msg['from'])
 		elif msg['body'].lower() == '!help':
