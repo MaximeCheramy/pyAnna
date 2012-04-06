@@ -7,8 +7,8 @@ from datetime import date
 import threading
 
 class Reminder(Module):
-	_tab = []
-	_tab_private = []
+	_dico = {}
+	_dico_private = {}
 	_thread = None
 	_continuer = True
 
@@ -46,29 +46,36 @@ class Reminder(Module):
 				# On ne met pas de rappel pour un message vide...
 				if m_rappel != '':
 					if not to:
-						# On mets les deux dans un tableau pour les rappels généraux
-						self._tab.append((t_rappel, m_rappel))
+						# On mets les deux dans un dico pour les rappels généraux
+						if t_rappel in self._dico:
+							self._dico[t_rappel].append(m_rappel)
+						else:
+							self._dico[t_rappel] = [m_rappel]
 						# On annonce que c'est OK
 						self.room.send_message("Rappel enregistré pour "+str(heure)+"h"+str(minutes)+" , message : "+m_rappel)
 					else:
 						# On mets les deux dans un tableau pour les rappels private
-						self._tab_private.append((t_rappel, m_rappel, to))
+						if t_rappel in self._dico_private:
+							self._dico_private[t_rappel].append((m_rappel, to))
+						else:
+							self._dico_private[t_rappel] = [(m_rappel, to)]
 						# On annonce que c'est OK
 						self.room.send_private_message("Rappel enregistré pour "+str(heure)+"h"+str(minutes)+" , message : "+m_rappel, to)
 	
 	def rappeler(self):
 		while self._continuer:
 			Current_Time = datetime.datetime(1,1,1,int(time.strftime("%H")), int(time.strftime("%M")),  int(time.strftime("%S")) )
-			# On parcours le tableau "normal"
-			for e in self._tab:
-				if e[0] == Current_Time:
-					self.room.send_message("RAPPEL ("+str(Current_Time)[11:]+") : "+e[1])
-					self._tab.remove(e)
-			# On parcours le tableau "spécial"
-			for e in self._tab_private:
-				if e[0] == Current_Time:
-					self.room.send_private_message("RAPPEL ("+str(Current_Time)[11:]+") : "+e[1], e[2])
-					self._tab_private.remove(e)
+			# On regarde si l'évènement est dans le dictionnaire "normal"
+			if Current_Time in self._dico:
+				for e in self._dico[Current_Time]:
+					self.room.send_message("RAPPEL ("+str(Current_Time)[11:]+") : "+e)
+					self._dico[Current_Time].remove(e)
+
+			# On regarde si l'évènement est dans le dictionnaire "private"
+			if Current_Time in self._dico_private:
+				for e in self._dico_private[Current_Time]:
+					self.room.send_private_message("RAPPEL ("+str(Current_Time)[11:]+") : "+e[0], e[1])
+					self._dico_private[Current_Time].remove(e)
 			time.sleep(1)
 
 	def handle_message(self, msg):
