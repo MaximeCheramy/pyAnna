@@ -69,13 +69,15 @@ class Reminder(Module):
 			if Current_Time in self._dico:
 				for e in self._dico[Current_Time]:
 					self.room.send_message("RAPPEL ("+str(Current_Time)[11:]+") : "+e)
-					self._dico[Current_Time].remove(e)
+				# On a fini de traiter l'évènement, on le supprime
+				del self._dico[Current_Time]
 
 			# On regarde si l'évènement est dans le dictionnaire "private"
 			if Current_Time in self._dico_private:
 				for e in self._dico_private[Current_Time]:
 					self.room.send_private_message("RAPPEL ("+str(Current_Time)[11:]+") : "+e[0], e[1])
-					self._dico_private[Current_Time].remove(e)
+				# On a fini de traiter l'évènement, on le supprime
+				del self._dico_private[Current_Time]	
 			time.sleep(1)
 
 	def handle_message(self, msg):
